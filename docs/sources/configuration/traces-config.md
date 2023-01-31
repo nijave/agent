@@ -222,6 +222,8 @@ spanmetrics:
   # latency_histogram_buckets and dimensions are the same as the configs in
   # spanmetricsprocessor.
   [ latency_histogram_buckets: <spanmetricsprocessor.latency_histogram_buckets> ]
+  # dimensions_cache_size configures the spanmetrics processor cache size
+  [ dimensions_cache_size: <spanmetricsprocessor.dimensions_cache_size> ]
   [ dimensions: <spanmetricsprocessor.dimensions> ]
   # const_labels are labels that will always get applied to the exported
   # metrics.

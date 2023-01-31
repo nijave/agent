@@ -295,6 +295,7 @@ func (c *RemoteWriteConfig) UnmarshalYAML(unmarshal func(interface{}) error) err
 // SpanMetricsConfig controls the configuration of spanmetricsprocessor and the related metrics exporter.
 type SpanMetricsConfig struct {
 	LatencyHistogramBuckets []time.Duration                  `yaml:"latency_histogram_buckets,omitempty"`
+	DimensionsCacheSize     uint64                           `yaml:"dimensions_cache_size,omitempty"`
 	Dimensions              []spanmetricsprocessor.Dimension `yaml:"dimensions,omitempty"`
 	// Namespace if set, exports metrics under the provided value.
 	Namespace string `yaml:"namespace,omitempty"`
@@ -665,6 +666,7 @@ func (c *InstanceConfig) otelConfig() (*config.Config, error) {
 		processors["spanmetrics"] = map[string]interface{}{
 			"metrics_exporter":          exporterName,
 			"latency_histogram_buckets": c.SpanMetrics.LatencyHistogramBuckets,
+			"dimensions_cache_size":     c.SpanMetrics.DimensionsCacheSize,
 			"dimensions":                c.SpanMetrics.Dimensions,
 		}
 

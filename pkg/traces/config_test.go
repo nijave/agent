@@ -619,6 +619,50 @@ service:
 `,
 		},
 		{
+			name: "span metrics dimensions cache size",
+			cfg: `
+receivers:
+  jaeger:
+    protocols:
+      grpc:
+remote_write:
+  - endpoint: example.com:12345
+spanmetrics:
+  handler_endpoint: "0.0.0.0:8889"
+  dimensions_cache_size: 5
+`,
+			expectedConfig: `
+receivers:
+  push_receiver: {}
+  noop:
+  jaeger:
+    protocols:
+      grpc:
+exporters:
+  otlp/0:
+    endpoint: example.com:12345
+    compression: gzip
+    retry_on_failure:
+      max_elapsed_time: 60s
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: traces_spanmetrics
+processors:
+  spanmetrics:
+    metrics_exporter: prometheus
+extensions: {}
+service:
+  pipelines:
+    traces:
+      exporters: ["otlp/0"]
+      processors: ["spanmetrics"]
+      receivers: ["push_receiver", "jaeger"]
+    metrics/spanmetrics:
+      exporters: ["prometheus"]
+      receivers: ["noop"]
+`,
+		},
+		{
 			name: "span metrics prometheus and remote write exporters fail",
 			cfg: `
 receivers:
